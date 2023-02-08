@@ -11,4 +11,18 @@ services:
     expose:
       - 27017
     volumes:
-      - ./.docker/data/mongo:/data/db
+      - ./.docker/data/mongo:/data/db:rw
+
+  mysql:
+    container_name: mysql
+    image: mysql:latest
+    restart: always
+    ports:
+      - "3306:3306"
+    expose:
+      - 3306
+    volumes:
+      - ./.docker/data/mysql:/var/lib/mysql:rw
+    environment:
+      - MYSQL_ROOT_PASSWORD=root
+      - MYSQL_DATABASE=order-service
