@@ -1,5 +1,6 @@
 package com.microcommerce.orderservice.service;
 
+import com.microcommerce.inventoryservice.response.InventoryResponse;
 import com.microcommerce.orderservice.dto.OrderItemDto;
 import com.microcommerce.orderservice.model.Order;
 import com.microcommerce.orderservice.model.OrderItem;
@@ -8,7 +9,9 @@ import com.microcommerce.orderservice.request.OrderRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.reactive.function.client.WebClient;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
@@ -17,6 +20,7 @@ import java.util.UUID;
 @Transactional
 public class OrderService {
     private final OrderRepository orderRepository;
+    private final WebClient webClient;
 
 
     public void placeOrder(OrderRequest orderRequest) {
@@ -26,6 +30,22 @@ public class OrderService {
         List<OrderItem> orderItems = orderRequest.getOrderItems().stream().map(this::OrderItemsTransformer).toList();
 
         order.setOrderItemList(orderItems);
+
+        List<String> skuCodes = order.getOrderItemList().stream().map(OrderItem::getSkuCode).toList();
+
+        // call inventory service and place order if product is in stock
+        InventoryResponse[] inventoryResponses = webClient.get()
+                .uri("http://localhost:8082/api/inventories", uriBuilder -> uriBuilder.queryParam("skuCodes", skuCodes)
+                        .build())
+                .retrieve()
+                .bodyToMono(InventoryResponse[].class)
+                .block();
+
+        boolean allProductsInStock = Arrays.stream(inventoryResponses).allMatch(InventoryResponse::isInStock);
+
+        if (Boolean.FALSE.equals(allProductsInStock)) {
+            throw new IllegalArgumentException("Some product are not in stock, please try again later.");
+        }
 
         orderRepository.save(order);
     }
