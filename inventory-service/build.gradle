@@ -1,0 +1,9 @@
+plugins {
+    id 'com.microcommerce.common-conventions'
+    id 'com.microcommerce.spring-conventions'
+}
+
+dependencies {
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    runtimeOnly 'com.mysql:mysql-connector-j'
+}
