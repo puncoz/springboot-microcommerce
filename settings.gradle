@@ -8,3 +8,5 @@
  */
 
 rootProject.name = 'java-microcommerce'
+
+include 'product-service'
