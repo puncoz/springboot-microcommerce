@@ -4,7 +4,7 @@ import com.microcommerce.orderservice.dto.OrderItemDto;
 import com.microcommerce.orderservice.model.Order;
 import com.microcommerce.orderservice.model.OrderItem;
 import com.microcommerce.orderservice.request.OrderRequest;
-import com.microcommerce.orderservice.respository.OrderRepository;
+import com.microcommerce.orderservice.repository.OrderRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

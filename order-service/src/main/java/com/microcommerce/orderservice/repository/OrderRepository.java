@@ -1,4 +1,4 @@
-package com.microcommerce.orderservice.respository;
+package com.microcommerce.orderservice.repository;
 
 import com.microcommerce.orderservice.model.Order;
 import org.springframework.data.jpa.repository.JpaRepository;
