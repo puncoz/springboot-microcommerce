@@ -1,0 +1,9 @@
+plugins {
+    id 'com.microcommerce.common-conventions'
+    id 'com.microcommerce.spring-conventions'
+    id 'com.microcommerce.eureka-conventions'
+}
+
+dependencies {
+    implementation 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-server'
+}

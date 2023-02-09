@@ -1,9 +1,12 @@
 plugins {
     id 'com.microcommerce.common-conventions'
     id 'com.microcommerce.spring-conventions'
+    id 'com.microcommerce.eureka-conventions'
 }
 
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-data-mongodb'
     testImplementation libs.test.containers.mongodb
+
+    implementation 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-client'
 }

@@ -1,6 +1,7 @@
 plugins {
     id 'com.microcommerce.common-conventions'
     id 'com.microcommerce.spring-conventions'
+    id 'com.microcommerce.eureka-conventions'
 }
 
 dependencies {
@@ -9,4 +10,6 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-webflux'
 
     implementation project(":inventory-service")
+
+    implementation 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-client'
 }
