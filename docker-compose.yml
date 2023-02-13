@@ -35,8 +35,20 @@ services:
       - "33062:3306"
     expose:
       - 3306
-#    volumes:
+    volumes:
       - ./.docker/data/inventories:/var/lib/mysql:rw
     environment:
       - MYSQL_ROOT_PASSWORD=root
       - MYSQL_DATABASE=inventory-service
+
+  keycloak:
+    container_name: keycloak
+    image: quay.io/keycloak/keycloak:20.0.3
+    command: [ "start-dev" ]
+    environment:
+      - KEYCLOAK_ADMIN=admin
+      - KEYCLOAK_ADMIN_PASSWORD=admin
+    ports:
+      - "8181:8080"
+    volumes:
+      - ./.docker/keycloak/realms/:/opt/keycloak/data/import/
