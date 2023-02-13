@@ -2,8 +2,8 @@
 version: "3.8"
 
 services:
-  mongo:
-    container_name: mongo
+  product-db:
+    container_name: product-db
     image: mongo:latest
     restart: always
     ports:
@@ -11,19 +11,32 @@ services:
     expose:
       - 27017
     volumes:
-      - ./.docker/data/mongo:/data/db:rw
+      - ./.docker/data/products:/data/db:rw
 
-  mysql:
-    container_name: mysql
+  order-db:
+    container_name: order-db
     image: mysql:latest
     restart: always
     ports:
-      - "3306:3306"
+      - "33061:3306"
     expose:
       - 3306
     volumes:
-      - ./.docker/data/mysql:/var/lib/mysql:rw
-      - ./.docker/mysql/init.sql:/docker-entrypoint-initdb.d/1.sql
+      - ./.docker/data/orders:/var/lib/mysql:rw
     environment:
       - MYSQL_ROOT_PASSWORD=root
       - MYSQL_DATABASE=order-service
+
+  inventory-db:
+    container_name: inventory-db
+    image: mysql:latest
+    restart: always
+    ports:
+      - "33062:3306"
+    expose:
+      - 3306
+#    volumes:
+      - ./.docker/data/inventories:/var/lib/mysql:rw
+    environment:
+      - MYSQL_ROOT_PASSWORD=root
+      - MYSQL_DATABASE=inventory-service

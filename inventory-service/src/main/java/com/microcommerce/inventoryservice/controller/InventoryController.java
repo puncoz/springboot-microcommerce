@@ -16,6 +16,12 @@ public class InventoryController {
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
+    public String index() {
+        return "Inventory index page";
+    }
+
+    @GetMapping(path = "/check")
+    @ResponseStatus(HttpStatus.OK)
     public List<InventoryResponse> areInStock(@RequestParam List<String> skuCodes) {
         return inventoryService.areInStock(skuCodes);
     }

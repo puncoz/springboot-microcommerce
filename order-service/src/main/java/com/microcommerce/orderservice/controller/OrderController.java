@@ -12,6 +12,12 @@ import org.springframework.web.bind.annotation.*;
 public class OrderController {
     private final OrderService orderService;
 
+    @GetMapping
+    @ResponseStatus(HttpStatus.OK)
+    public String index() {
+        return "Order index page";
+    }
+
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public String placeOrder(@RequestBody OrderRequest orderRequest) {
