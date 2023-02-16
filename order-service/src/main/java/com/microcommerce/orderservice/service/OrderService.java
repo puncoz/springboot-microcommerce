@@ -39,30 +39,31 @@ public class OrderService {
 
         Span inventoryServiceLookup = tracer.nextSpan().name("InventoryServiceLookup");
 
-        try {
-            tracer.withSpan(inventoryServiceLookup.start());
+        try (Tracer.SpanInScope spanInScope = tracer.withSpan(inventoryServiceLookup.start())) {
+            // call inventory service and place order if product is in stock
+            InventoryResponse[] inventoryResponses = webClientBuilder.build()
+                    .get()
+                    .uri("http://inventory-service/api/inventories/check", uriBuilder -> uriBuilder.queryParam("skuCodes", skuCodes)
+                            .build())
+                    .retrieve()
+                    .bodyToMono(InventoryResponse[].class)
+                    .block();
+
+            boolean allProductsInStock = Arrays.stream(inventoryResponses).allMatch(InventoryResponse::isInStock);
+
+            if (Boolean.FALSE.equals(allProductsInStock)) {
+                throw new IllegalArgumentException("Some product are not in stock, please try again later.");
+            }
+
+            orderRepository.save(order);
+
+            return "Order placed successfully.";
         } finally {
-
+            inventoryServiceLookup.end();
         }
 
-        // call inventory service and place order if product is in stock
-        InventoryResponse[] inventoryResponses = webClientBuilder.build()
-                .get()
-                .uri("http://inventory-service/api/inventories/check", uriBuilder -> uriBuilder.queryParam("skuCodes", skuCodes)
-                        .build())
-                .retrieve()
-                .bodyToMono(InventoryResponse[].class)
-                .block();
 
-        boolean allProductsInStock = Arrays.stream(inventoryResponses).allMatch(InventoryResponse::isInStock);
 
-        if (Boolean.FALSE.equals(allProductsInStock)) {
-            throw new IllegalArgumentException("Some product are not in stock, please try again later.");
-        }
-
-        orderRepository.save(order);
-
-        return "Order placed successfully.";
     }
 
     private OrderItem OrderItemsTransformer(OrderItemDto item) {
