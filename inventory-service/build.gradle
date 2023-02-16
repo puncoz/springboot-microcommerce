@@ -2,6 +2,7 @@ plugins {
     id 'com.microcommerce.common-conventions'
     id 'com.microcommerce.spring-conventions'
     id 'com.microcommerce.eureka-conventions'
+    id 'com.microcommerce.distributed-tracing-conventions'
 }
 
 dependencies {
