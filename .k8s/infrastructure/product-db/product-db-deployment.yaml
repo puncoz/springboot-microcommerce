@@ -1,0 +1,23 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: product-db
+  name: product-db
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: product-db
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: product-db
+    spec:
+      containers:
+        - image: mongo:latest
+          name: mongo
+      restartPolicy: Always
+
